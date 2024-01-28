@@ -1,14 +1,3 @@
-const PROPERTIES_TO_INCLUDE = [
-  "selectable",
-  "data",
-  "name",
-  "visible",
-  "path",
-  "fill",
-  "snapAngle",
-  // 'controls',
-];
-
 /**
  * Override the initialize function for the _historyInit();
  */
@@ -56,7 +45,17 @@ fabric.Canvas.prototype._historyEvents = function () {
 fabric.Canvas.prototype._historyInit = function () {
   this.historyUndo = [];
   this.historyRedo = [];
-  this.extraProps = ["selectable", "editable", ...PROPERTIES_TO_INCLUDE];
+  this.extraProps = [
+    "selectable",
+    "editable",
+    "data",
+    "name",
+    "visible",
+    "path",
+    "fill",
+    "snapAngle",
+    "controls",
+  ];
   this.historyNextState = this._historyNext();
 
   this.on(this._historyEvents());
