@@ -1,3 +1,14 @@
+const PROPERTIES_TO_INCLUDE = [
+  "selectable",
+  "data",
+  "name",
+  "visible",
+  "path",
+  "fill",
+  "snapAngle",
+  // 'controls',
+];
+
 /**
  * Override the initialize function for the _historyInit();
  */
@@ -32,10 +43,10 @@ fabric.Canvas.prototype._historyNext = function () {
  */
 fabric.Canvas.prototype._historyEvents = function () {
   return {
-    'object:added': this._historySaveAction,
-    'object:removed': this._historySaveAction,
-    'object:modified': this._historySaveAction,
-    'object:skewing': this._historySaveAction,
+    "object:added": this._historySaveAction,
+    "object:removed": this._historySaveAction,
+    "object:modified": this._historySaveAction,
+    "object:skewing": this._historySaveAction,
   };
 };
 
@@ -45,7 +56,7 @@ fabric.Canvas.prototype._historyEvents = function () {
 fabric.Canvas.prototype._historyInit = function () {
   this.historyUndo = [];
   this.historyRedo = [];
-  this.extraProps = ['selectable', 'editable'];
+  this.extraProps = ["selectable", "editable", ...PROPERTIES_TO_INCLUDE];
   this.historyNextState = this._historyNext();
 
   this.on(this._historyEvents());
@@ -67,7 +78,7 @@ fabric.Canvas.prototype._historySaveAction = function () {
   const json = this.historyNextState;
   this.historyUndo.push(json);
   this.historyNextState = this._historyNext();
-  this.fire('history:append', { json: json });
+  this.fire("history:append", { json: json });
 };
 
 /**
@@ -86,7 +97,7 @@ fabric.Canvas.prototype.undo = function (callback) {
     // Push the current state to the redo history
     this.historyRedo.push(this._historyNext());
     this.historyNextState = history;
-    this._loadHistory(history, 'history:undo', callback);
+    this._loadHistory(history, "history:undo", callback);
   } else {
     this.historyProcessing = false;
   }
@@ -105,7 +116,7 @@ fabric.Canvas.prototype.redo = function (callback) {
     // Every redo action is actually a new action to the undo history
     this.historyUndo.push(this._historyNext());
     this.historyNextState = history;
-    this._loadHistory(history, 'history:redo', callback);
+    this._loadHistory(history, "history:redo", callback);
   } else {
     this.historyProcessing = false;
   }
@@ -119,7 +130,7 @@ fabric.Canvas.prototype._loadHistory = function (history, event, callback) {
     that.fire(event);
     that.historyProcessing = false;
 
-    if (callback && typeof callback === 'function') callback();
+    if (callback && typeof callback === "function") callback();
   });
 };
 
@@ -129,7 +140,7 @@ fabric.Canvas.prototype._loadHistory = function (history, event, callback) {
 fabric.Canvas.prototype.clearHistory = function () {
   this.historyUndo = [];
   this.historyRedo = [];
-  this.fire('history:clear');
+  this.fire("history:clear");
 };
 
 /**
